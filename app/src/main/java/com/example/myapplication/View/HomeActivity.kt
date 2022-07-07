@@ -1,5 +1,6 @@
 package com.example.myapplication.View
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.example.moviesapp.Adapter.MovieListAdapter
+import com.example.moviesapp.DependencyInjection.Animations
 import com.example.myapplication.R
 import com.example.myapplication.ViewModel.RetrofitViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
@@ -33,7 +36,6 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
-
             override fun onQueryTextChange(newText: String): Boolean {
                 if (newText == "") {
                     initViewModel()
@@ -46,17 +48,16 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
     }
     private fun filterMovies(newText: String) {
         viewModel = ViewModelProvider(this).get(RetrofitViewModel::class.java)
-        viewModel.getLiveDataObserver().observe(this, {
+        viewModel.getLiveDataObserver().observe(this) {
             if (it != null) {
                 recyclerAdapter.setMovieList(it)
                 recyclerAdapter.notifyDataSetChanged()
             } else {
                 Toast.makeText(this, "Error in getting List!!", Toast.LENGTH_LONG).show()
             }
-        })
+        }
         viewModel.filterMovies(newText)
     }
-
 
     private fun initViewModel() {
         val viewModel = ViewModelProvider(this).get(RetrofitViewModel::class.java)
@@ -70,7 +71,7 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
                 Toast.makeText(this, "Error in getting List!!", Toast.LENGTH_LONG).show()
             }
         })
-        viewModel.makeAPICall()
+        viewModel.fetchMovies()
     }
 
     private fun initRecyclerViewHorizontal() {
@@ -86,6 +87,10 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
     }
 
     override fun onItemClick(position: Int) {
-        Log.d("onItemClick", "onItemClick")
+        val viewModel = ViewModelProvider(this).get(RetrofitViewModel::class.java)
+        val itemsModel = viewModel.movieItemm[position]
+        val intent = Intent(applicationContext, MovieDetailsActivity::class.java)
+        intent.putExtra("Movie", itemsModel)
+        startActivity(intent)
     }
 }

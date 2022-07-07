@@ -12,6 +12,10 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 
 android {
+
+    buildFeatures {
+        dataBinding true
+    }
     compileSdk 32
 
     defaultConfig {
@@ -37,6 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
 }
 
 kapt {
@@ -51,6 +56,8 @@ hilt {
 hilt {
     enableExperimentalClasspathAggregation = true
 }
+
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'

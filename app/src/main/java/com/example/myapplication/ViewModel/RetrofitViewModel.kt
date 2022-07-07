@@ -22,28 +22,25 @@ private const val TAG = "RetrofitViewModel"
 class RetrofitViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    var liveDataList: MutableLiveData<List<Movie>>
+    var liveDataList: MutableLiveData<List<Movie>> = MutableLiveData()
     val movieItemm: MutableList<Movie> = mutableListOf()
-    init {
-        liveDataList = MutableLiveData()
-    }
 
     fun getLiveDataObserver(): MutableLiveData<List<Movie>> {
         return liveDataList
     }
 
     fun filterMovies(filteredMovies: String) {
-        //  viewModelScope.launch(Dispatchers.IO) {// }
         val mov: MutableList<Movie> = mutableListOf()
         for (item in movieItemm) {
-            if (item.title?.lowercase()?.contains(filteredMovies.lowercase())!!) {
+            if (item.title?.lowercase()?.contains(filteredMovies.lowercase()) == true) {
                 mov.add(item)
+                Log.d("Movie", "$mov")
             }
         }
         liveDataList.postValue(mov)
     }
 
-    fun makeAPICall() {
+    fun fetchMovies() {
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.remote.getApiMovies()
             response.enqueue(object : Callback<MoviesResponse> {
