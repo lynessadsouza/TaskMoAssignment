@@ -1,4 +1,5 @@
 package com.example.myapplication.View
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -16,17 +17,15 @@ import kotlinx.android.synthetic.main.activity_home.*
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
     lateinit var recyclerAdapter: MovieListAdapter
- lateinit var recyclerAdapterh: MovieListAdapter
+    lateinit var recyclerAdapterh: MovieListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        initRecyclerViewh()
+        initRecyclerViewHorizontal()
         initRecyclerView()
         initViewModel()
     }
-
 
 
     private fun initViewModel() {
@@ -39,28 +38,24 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
                 recyclerAdapterh.notifyDataSetChanged()
             } else {
                 Toast.makeText(this, "Error in getting List!!", Toast.LENGTH_LONG).show()
-            }//////
+            }
         })
         viewModel.makeAPICall()
     }
-    private fun initRecyclerViewh() {
 
+    private fun initRecyclerViewHorizontal() {
         moviesRecyclerHorizontal.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
         recyclerAdapterh = MovieListAdapter(this, this)
         moviesRecyclerHorizontal.adapter = recyclerAdapterh
     }
+
     private fun initRecyclerView() {
-
-      //  mRecyclerView?.layoutManager = LinearLayoutManager(
-        //    this,
-          //  LinearLayoutManager.HORIZONTAL, false)
-
-       moviesRecyclerVertical.layoutManager = GridLayoutManager(this, 3)
+        moviesRecyclerVertical.layoutManager = GridLayoutManager(this, 3)
         recyclerAdapter = MovieListAdapter(this, this)
         moviesRecyclerVertical.adapter = recyclerAdapter
     }
 
     override fun onItemClick(position: Int) {
-    Log.d("onItemClick","onItemClick")
+        Log.d("onItemClick", "onItemClick")
     }
 }
