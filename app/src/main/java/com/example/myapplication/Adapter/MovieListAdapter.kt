@@ -49,7 +49,6 @@ class MovieListAdapter (
         return MyViewHolder(
             LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false), mlistner
         )
-
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

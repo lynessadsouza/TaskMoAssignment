@@ -31,7 +31,6 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
         initRecyclerView()
         initViewModel()
 
-
         movieSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false

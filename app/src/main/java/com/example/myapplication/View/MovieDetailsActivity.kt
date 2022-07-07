@@ -19,7 +19,6 @@ class MovieDetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityMovieDetailsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //  setContentView(R.layout.activity_movie_details)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
         val movies = intent.getSerializableExtra("Movie") as Movie?
         startAnimation()
@@ -36,6 +35,7 @@ class MovieDetailsActivity : AppCompatActivity() {
         textView.startAnimation(animation.ttb)
         year.startAnimation(animation.ttb)
         movieRating.startAnimation(animation.ttb)
+        desc.startAnimation(animation.ttb)
         imageView2.startAnimation(animation.ttb)
     }
 }
