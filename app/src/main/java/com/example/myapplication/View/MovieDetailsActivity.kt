@@ -22,20 +22,30 @@ class MovieDetailsActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details)
         val movies = intent.getSerializableExtra("Movie") as Movie?
         startAnimation()
+
+
+
+
         Glide.with(this).load(movies?.image).into(binding.detailsThumbnail)
         binding.movieTitle.text = movies?.title
         binding.textView.text = movies?.description
         binding.year.text = movies?.year
-        binding.movieRating.text = movies?.imDbRating
+
+
+
+        val rating : Float? =(movies?.imDbRating?.toFloat()?.div(2))
+        if (rating != null) {
+            binding.movieRating.rating =rating
+        }
     }
 
     private fun startAnimation() {
-        detailsThumbnail.startAnimation(animation.zoomAnimation)
-        movieTitle.startAnimation(animation.ttb)
-        textView.startAnimation(animation.ttb)
-        year.startAnimation(animation.ttb)
-        movieRating.startAnimation(animation.ttb)
-        desc.startAnimation(animation.ttb)
-        imageView2.startAnimation(animation.ttb)
+        binding.detailsThumbnail.startAnimation(animation.zoomAnimation)
+        binding.movieTitle.startAnimation(animation.ttb)
+        binding.textView.startAnimation(animation.ttb)
+        binding.year.startAnimation(animation.ttb)
+        binding.movieRating.startAnimation(animation.ttb)
+        binding.desc.startAnimation(animation.ttb)
+        binding.movieRating.startAnimation(animation.ttb)
     }
 }
