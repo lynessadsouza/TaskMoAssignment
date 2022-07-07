@@ -23,6 +23,7 @@ class RetrofitViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     var liveDataList: MutableLiveData<List<Movie>>
+    val movieItemm: MutableList<Movie> = mutableListOf()
     init {
         liveDataList = MutableLiveData()
     }
@@ -31,6 +32,16 @@ class RetrofitViewModel @Inject constructor(
         return liveDataList
     }
 
+    fun filterMovies(filteredMovies: String) {
+        //  viewModelScope.launch(Dispatchers.IO) {// }
+        val mov: MutableList<Movie> = mutableListOf()
+        for (item in movieItemm) {
+            if (item.title?.lowercase()?.contains(filteredMovies.lowercase())!!) {
+                mov.add(item)
+            }
+        }
+        liveDataList.postValue(mov)
+    }
 
     fun makeAPICall() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -55,6 +66,7 @@ class RetrofitViewModel @Inject constructor(
                             movie.index = movieItem.index
                             movie.description = movieItem.description
                             movies.add(movie)
+                            movieItemm.add(movie)
 
                         }
                     }

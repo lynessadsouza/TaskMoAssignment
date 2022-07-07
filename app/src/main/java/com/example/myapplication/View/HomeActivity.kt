@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
     lateinit var recyclerAdapter: MovieListAdapter
     lateinit var recyclerAdapterh: MovieListAdapter
+    private lateinit var viewModel: RetrofitViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,35 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
         initRecyclerViewHorizontal()
         initRecyclerView()
         initViewModel()
+
+
+        movieSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText == "") {
+                    initViewModel()
+                } else {
+                    filterMovies(newText)
+                }
+                return true
+            }
+        })
+    }
+    private fun filterMovies(newText: String) {
+        viewModel = ViewModelProvider(this).get(RetrofitViewModel::class.java)
+        viewModel.getLiveDataObserver().observe(this, {
+            if (it != null) {
+                recyclerAdapter.setMovieList(it)
+                recyclerAdapter.notifyDataSetChanged()
+            } else {
+                Toast.makeText(this, "Error in getting List!!", Toast.LENGTH_LONG).show()
+            }
+        })
+        viewModel.filterMovies(newText)
+        // }
     }
 
 
