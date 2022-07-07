@@ -1,11 +1,66 @@
 package com.example.myapplication.View
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import com.example.moviesapp.Adapter.MovieListAdapter
 import com.example.myapplication.R
+import com.example.myapplication.ViewModel.RetrofitViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_home.*
 
-class HomeActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
+    lateinit var recyclerAdapter: MovieListAdapter
+ lateinit var recyclerAdapterh: MovieListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        initRecyclerViewh()
+        initRecyclerView()
+        initViewModel()
+    }
+
+
+
+    private fun initViewModel() {
+        val viewModel = ViewModelProvider(this).get(RetrofitViewModel::class.java)
+        viewModel.getLiveDataObserver().observe(this, {
+            if (it != null) {
+                recyclerAdapter.setMovieList(it)
+                recyclerAdapter.notifyDataSetChanged()
+                recyclerAdapterh.setMovieList(it)
+                recyclerAdapterh.notifyDataSetChanged()
+            } else {
+                Toast.makeText(this, "Error in getting List!!", Toast.LENGTH_LONG).show()
+            }//////
+        })
+        viewModel.makeAPICall()
+    }
+    private fun initRecyclerViewh() {
+
+        moviesRecyclerHorizontal.layoutManager = LinearLayoutManager(this, HORIZONTAL, false)
+        recyclerAdapterh = MovieListAdapter(this, this)
+        moviesRecyclerHorizontal.adapter = recyclerAdapterh
+    }
+    private fun initRecyclerView() {
+
+      //  mRecyclerView?.layoutManager = LinearLayoutManager(
+        //    this,
+          //  LinearLayoutManager.HORIZONTAL, false)
+
+       moviesRecyclerVertical.layoutManager = GridLayoutManager(this, 3)
+        recyclerAdapter = MovieListAdapter(this, this)
+        moviesRecyclerVertical.adapter = recyclerAdapter
+    }
+
+    override fun onItemClick(position: Int) {
+    Log.d("onItemClick","onItemClick")
     }
 }
