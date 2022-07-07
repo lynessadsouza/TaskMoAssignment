@@ -55,7 +55,6 @@ class HomeActivity : AppCompatActivity(), MovieListAdapter.onItemClickListner {
             }
         })
         viewModel.filterMovies(newText)
-        // }
     }
 
 
